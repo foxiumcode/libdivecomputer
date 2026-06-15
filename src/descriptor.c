@@ -64,6 +64,7 @@ static int dc_filter_divesoft (const dc_descriptor_t *descriptor, dc_transport_t
 static int dc_filter_cressi (const dc_descriptor_t *descriptor, dc_transport_t transport, const void *userdata);
 static int dc_filter_halcyon (const dc_descriptor_t *descriptor, dc_transport_t transport, const void *userdata);
 static int dc_filter_seac (const dc_descriptor_t *descriptor, dc_transport_t transport, const void *userdata);
+static int dc_filter_sunroad (const dc_descriptor_t *descriptor, dc_transport_t transport, const void *userdata);
 
 static dc_status_t dc_descriptor_iterator_next (dc_iterator_t *iterator, void *item);
 
@@ -491,6 +492,8 @@ static const dc_descriptor_t g_descriptors[] = {
 	/* Halcyon Symbios */
 	{"Halcyon", "Symbios HUD",     DC_FAMILY_HALCYON_SYMBIOS, 1, DC_TRANSPORT_BLE, dc_filter_halcyon},
 	{"Halcyon", "Symbios Handset", DC_FAMILY_HALCYON_SYMBIOS, 7, DC_TRANSPORT_BLE, dc_filter_halcyon},
+	/* Sunroad */
+	{ "Sunroad", "D3", DC_FAMILY_SUNROAD, 0, DC_TRANSPORT_BLE, dc_filter_sunroad},
 };
 
 static int
@@ -958,6 +961,20 @@ dc_filter_halcyon (const dc_descriptor_t *descriptor, dc_transport_t transport, 
 
 	if (transport == DC_TRANSPORT_BLE) {
 		return DC_FILTER_INTERNAL (userdata, model, 0, dc_match_halcyon);
+	}
+
+	return 1;
+}
+
+static int dc_filter_sunroad (const dc_descriptor_t *descriptor, dc_transport_t transport, const void *userdata)
+{
+	static const char * const bluetooth[] = {
+		"Sunroad D3",
+		"D3"
+	};
+
+	if (transport == DC_TRANSPORT_BLE) {
+		return DC_FILTER_INTERNAL (userdata, bluetooth, 0, dc_match_prefix);
 	}
 
 	return 1;

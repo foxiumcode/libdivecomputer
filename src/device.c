@@ -67,6 +67,7 @@
 #include "oceans_s1.h"
 #include "divesoft_freedom.h"
 #include "halcyon_symbios.h"
+#include "sunroad_d3.h"
 
 #include "device-private.h"
 #include "context-private.h"
@@ -250,6 +251,9 @@ dc_device_open (dc_device_t **out, dc_context_t *context, dc_descriptor_t *descr
 		break;
 	case DC_FAMILY_HALCYON_SYMBIOS:
 		rc = halcyon_symbios_device_open (&device, context, iostream);
+		break;
+	case DC_FAMILY_SUNROAD:
+		rc = sunroad_d3_device_open(&device, context, iostream);
 		break;
 	default:
 		return DC_STATUS_INVALIDARGS;
