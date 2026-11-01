@@ -87,6 +87,30 @@ static const dc_iterator_vtable_t dc_descriptor_iterator_vtable = {
 	NULL,
 };
 
+static int dc_filter_sunroad (const dc_descriptor_t *descriptor, dc_transport_t transport, const void *userdata)
+{
+	(void) descriptor;
+	if (transport != DC_TRANSPORT_BLE || userdata == NULL)
+		return 0;
+
+	const char *name = (const char *) userdata;
+
+	/*
+	 * The Sunroad D3 advertises as "  D3- XXXX" (with two leading spaces
+	 * and a 4-hex-character MAC suffix) or "D3-XXXX" / "Sunroad D3" if
+	 * trimmed by the OS Bluetooth stack. Skip any leading spaces first.
+	 */
+	while (*name == ' ')
+		name++;
+
+	if (strncasecmp (name, "D3-", 3) == 0 ||
+		strncasecmp (name, "D3 ", 3) == 0 ||
+		strncasecmp (name, "Sunroad", 7) == 0)
+		return 1;
+
+	return 0;
+}
+
 /*
  * The model numbers in the table are the actual model numbers reported by the
  * device. For devices where there is no model number available (or known), an
@@ -493,6 +517,8 @@ static const dc_descriptor_t g_descriptors[] = {
 	/* Halcyon Symbios */
 	{"Halcyon", "Symbios HUD",     DC_FAMILY_HALCYON_SYMBIOS, 1, DC_TRANSPORT_BLE, dc_filter_halcyon},
 	{"Halcyon", "Symbios Handset", DC_FAMILY_HALCYON_SYMBIOS, 7, DC_TRANSPORT_BLE, dc_filter_halcyon},
+	/* Sunroad */
+	{"Sunroad", "D3",               DC_FAMILY_SUNROAD_D3, 0, DC_TRANSPORT_BLE, dc_filter_sunroad},
 };
 
 static int

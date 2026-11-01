@@ -65,6 +65,7 @@
 #include "oceans_s1.h"
 #include "divesoft_freedom.h"
 #include "halcyon_symbios.h"
+#include "sunroad_d3.h"
 
 #include "context-private.h"
 #include "parser-private.h"
@@ -207,6 +208,9 @@ dc_parser_new_internal (dc_parser_t **out, dc_context_t *context, const unsigned
 		break;
 	case DC_FAMILY_HALCYON_SYMBIOS:
 		rc = halcyon_symbios_parser_create (&parser, context, data, size);
+		break;
+	case DC_FAMILY_SUNROAD_D3:
+		rc = sunroad_d3_parser_create (&parser, context, data, size);
 		break;
 	default:
 		return DC_STATUS_INVALIDARGS;
